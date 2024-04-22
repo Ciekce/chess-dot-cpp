@@ -647,6 +647,11 @@ Score Search::AlphaBeta(ThreadState& threadState, Board& board, Ply depth, const
         oldPlyState.Killers[0] = Move(0);
         oldPlyState.Killers[1] = Move(0);
     }
+    else if(ply > 0)
+    {
+        PlyData& oldPlyState = threadState.Plies[ply - 1];
+        plyState.DoubleExtensions = oldPlyState.DoubleExtensions;
+    }
 
     assert(depth > 0);
     if
@@ -901,6 +906,10 @@ Score Search::AlphaBeta(ThreadState& threadState, Board& board, Ply depth, const
             if(singularScore < singularBeta)
             {
                 extension++;
+                if(plyState.DoubleExtensions <= 8 && singularScore < singularBeta - 18)
+                {
+                    extension++;
+                }
             }
 
             // MULTICUT
@@ -920,6 +929,11 @@ Score Search::AlphaBeta(ThreadState& threadState, Board& board, Ply depth, const
                 }
             }
             movePicker = movePickerBackup;
+
+            if(extension >= 2)
+            {
+                plyState.DoubleExtensions++;
+            }
         }
         board.DoMove(move);
 

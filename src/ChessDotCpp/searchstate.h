@@ -78,6 +78,7 @@ public:
     Move SingularMove;
     MovePicker MMovePicker;
     PrincipalVariationData PrincipalVariation;
+    uint32_t DoubleExtensions;
 
     void NewSearch()
     {
